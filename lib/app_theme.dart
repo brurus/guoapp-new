@@ -35,24 +35,24 @@ abstract final class AppTheme {
 
   static ThemeData _theme(Brightness brightness) {
     final dark = brightness == Brightness.dark;
-    final background = dark ? const Color(0xFF101114) : const Color(0xFFFAF8F6);
+    final background = dark ? const Color(0xFF111019) : const Color(0xFFFAF8FC);
     final scheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFFFF664F),
+      seedColor: const Color(0xFF6F42C1),
       brightness: brightness,
-      primary: dark ? const Color(0xFFFF765F) : const Color(0xFFAD3826),
-      onPrimary: dark ? const Color(0xFF3B0E07) : Colors.white,
+      primary: dark ? const Color(0xFFB99CF6) : const Color(0xFF6F42C1),
+      onPrimary: dark ? const Color(0xFF241546) : Colors.white,
       primaryContainer: dark
-          ? const Color(0xFF5C3027)
-          : const Color(0xFFFFE0D8),
+          ? const Color(0xFF4D3E85)
+          : const Color(0xFFE9DCFB),
       onPrimaryContainer: dark
-          ? const Color(0xFFFFE0D8)
-          : const Color(0xFF4B160D),
-      tertiary: dark ? const Color(0xFFF6C86B) : const Color(0xFF805500),
+          ? const Color(0xFFE9DCFB)
+          : const Color(0xFF2B1B4D),
+      tertiary: dark ? const Color(0xFFCDBFFF) : const Color(0xFF5A4DB8),
       surface: dark ? const Color(0xFF16171B) : Colors.white,
-      onSurface: dark ? const Color(0xFFF2F0F4) : const Color(0xFF252328),
+      onSurface: dark ? const Color(0xFFE8E5F0) : const Color(0xFF211F2E),
       onSurfaceVariant: dark
-          ? const Color(0xFFB9B6C2)
-          : const Color(0xFF68636C),
+          ? const Color(0xFFC9C3D9)
+          : const Color(0xFF625E70),
       outline: dark ? const Color(0xFF85818B) : const Color(0xFF7C757D),
       outlineVariant: dark ? const Color(0xFF34343D) : const Color(0xFFE3DFDC),
       surfaceContainerLowest: dark ? const Color(0xFF0D0E11) : Colors.white,
