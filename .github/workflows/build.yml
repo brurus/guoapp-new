@@ -77,10 +77,12 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
+  # 安卓出包：当前暂时禁用（后期如需恢复，删除下面这行 `if: false` 即可重新启用）。
   android:
     needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    if: false
     strategy: &editions
       fail-fast: false
       matrix:
@@ -157,10 +159,12 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  # Windows 出包：当前暂时禁用（后期如需恢复，删除下面这行 `if: false` 即可重新启用）。
   windows:
     needs: prepare
     runs-on: windows-latest
     timeout-minutes: 45
+    if: false
     strategy: *editions
     steps:
       - uses: actions/checkout@v4
@@ -220,8 +224,10 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  # 发布：构建流程最后一步，汇总产物并发布 Release（含 Telegram 推送）。
+  # 当前仅 iOS 出包，安卓 / Windows 已禁用，恢复时把上面两个 job 的 `if: false` 删掉即可。
   release:
-    needs: [checks, prepare, android, windows, ios]
+    needs: [checks, prepare, ios]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -237,7 +243,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ needs.prepare.outputs.version }}
           TAG: ${{ needs.prepare.outputs.tag }}
-          ANDROID_CERT_SHA256: ${{ vars.ANDROID_CERT_SHA256 }}
         run: |
           set -euo pipefail
           cat > notes.md <<EOF
@@ -246,18 +251,8 @@ jobs:
           - 红果鉴 hongguojian：仅红果站源
           - 真果鉴 zhenguojian：全部站源
 
-          Android：
-          - *-arm64-v8a.apk：适用于较新的安卓设备
-          - *-armeabi-v7a.apk：适用于较老的安卓设备，电视推荐使用此版本
-          - *-x86_64.apk：适用于模拟器
-
           iOS：
           - *-ios-unsigned.ipa：未签名 IPA，可用相关工具安装
-
-          Windows：
-          - *-windows-x64.zip：解压后运行 hongguojian.exe 或 zhenguojian.exe
-
-          签名证书 SHA-256：${ANDROID_CERT_SHA256}
           EOF
           changes="$(awk -v heading="## ${VERSION}" '
             $0 == heading { found = 1; next }
