@@ -385,7 +385,7 @@ class LocalStore extends ChangeNotifier {
 
   bool get followSystemColor => _flag('followSystemColor', true);
   ThemeColor get themeColor =>
-      ThemeColor.byName(_settings['themeColor']) ?? ThemeColor.orange;
+      ThemeColor.byName(_settings['themeColor']) ?? ThemeColor.purple;
   bool get sideBarExpanded => preferences.getBool('sideBarExpanded') ?? true;
   bool get playerWide => preferences.getBool('playerWide') ?? false;
   ({double left, double top, double extent})? get miniWindow {

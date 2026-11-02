@@ -30,11 +30,11 @@ abstract final class AppTheme {
     Color seed,
     Brightness brightness, {
     required bool television,
+    ColorScheme? schemeOverride,
   }) {
-    final scheme = ColorScheme.fromSeed(
-      seedColor: seed,
-      brightness: brightness,
-    );
+    final scheme =
+        schemeOverride ??
+        ColorScheme.fromSeed(seedColor: seed, brightness: brightness);
     final theme = ThemeData(
       useMaterial3: true,
       colorScheme: scheme,

@@ -78,8 +78,10 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
+  # 安卓 出包：暂时禁用（后期恢复时删掉下面这行 if: false 即可）。
   android:
     needs: prepare
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy: &editions
@@ -158,8 +160,10 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  # Windows 出包：暂时禁用（后期恢复时删掉下面这行 if: false 即可）。
   windows:
     needs: prepare
+    if: false
     runs-on: windows-latest
     timeout-minutes: 45
     strategy: *editions
@@ -221,8 +225,10 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  # macOS 出包：暂时禁用（后期恢复时删掉下面这行 if: false 即可）。
   macos:
     needs: prepare
+    if: false
     runs-on: macos-latest
     timeout-minutes: 60
     strategy: *editions
@@ -256,7 +262,7 @@ jobs:
           retention-days: 14
 
   release:
-    needs: [checks, prepare, android, windows, ios, macos]
+    needs: [checks, prepare, ios]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -276,26 +282,15 @@ jobs:
         run: |
           set -euo pipefail
           cat > notes.md <<EOF
-          版本 ${VERSION}。两个版本功能相同，区别只在站源范围，按需选择：
+          版本 ${VERSION}。两个安装包功能相同，区别只在站源范围，按需选择：
 
-          - 红果鉴 hongguojian：仅红果站源
-          - 真果鉴 zhenguojian：全部站源
-
-          Android：
-          - *-arm64-v8a.apk：适用于较新的安卓设备
-          - *-armeabi-v7a.apk：适用于较老的安卓设备，电视推荐使用此版本
-          - *-x86_64.apk：适用于模拟器
+          - hongguojian：仅红果站源
+          - zhenguojian：全部站源
 
           iOS：
           - *-ios-unsigned.ipa：未签名 IPA，可用相关工具安装
 
-          Windows：
-          - *-windows-x64.zip：解压后运行 hongguojian.exe 或 zhenguojian.exe
-
-          macOS：
-          - *-macos-universal.dmg：适用于 macOS 12 及以上的 Apple 芯片和 Intel 电脑，打开后拖入 Applications；未经公证，首次打开前在终端执行 xattr -dr com.apple.quarantine /Applications/红果鉴.app（真果鉴为 真果鉴.app）
-
-          签名证书 SHA-256：${ANDROID_CERT_SHA256}
+          安装后桌面显示名称为 💗。
           EOF
           changes="$(awk -v heading="## ${VERSION}" '
             $0 == heading { found = 1; next }
@@ -308,7 +303,7 @@ jobs:
             { printf '更新内容：\n\n%s\n\n' "$changes"; cat notes.md; } > notes.tmp
             mv notes.tmp notes.md
           fi
-          gh release create "$TAG" release/* --target "$GITHUB_SHA" --title "红果鉴 / 真果鉴 ${VERSION}" --notes-file notes.md
+          gh release create "$TAG" release/* --target "$GITHUB_SHA" --title "💗 ${VERSION}" --notes-file notes.md
       - name: 推送到 Telegram 频道
         continue-on-error: true
         env:
@@ -324,7 +319,7 @@ jobs:
           fi
           changes="$(cat changes.md)"
           url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG"
-          text="红果鉴 / 真果鉴 ${VERSION} 已发布"
+          text="💗 ${VERSION} 已发布"
           if [ -n "$changes" ]; then
             text="$(printf '%s\n\n更新内容：\n\n%s' "$text" "${changes:0:3500}")"
           fi
